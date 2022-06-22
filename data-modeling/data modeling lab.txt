@@ -1,0 +1,132 @@
+users can sign into the app with their email and password
+
+users can create recipes with ingredients and instructions
+
+recipes can be marked as public or private
+
+users can view other people’s recipes
+
+ingredients from recipes can be added to user’s grocery lists
+
+users can create their own occasions and assign recipes to occasions
+
+			Users
+		will hold informations about the users
+user_id
+name
+username
+email address
+profile pictures
+
+		password_user
+	users password will be there
+password_id
+user_id
+password
+		recipes
+	the list of all recipes
+recipes_id
+ingredients
+pictures
+instructions
+public/private setting
+		
+		view_recipes
+	users will be able to see other user recipes
+user_id
+viewer_id
+recipes_id
+
+		user_recipes
+	each user personal recipes
+user_recipes_id
+user_id
+recipe_id
+
+		recipes_ingredients
+	the ingredients of each recipes
+recipes_ingredients_id
+user_recipes_id
+user_id
+		grocery_list
+	the list of each users grocery
+grocery_list_id
+user_id
+user_recipes
+recipes_ingredients_id
+
+		user_occasions
+	the occations created by users
+user_id
+user_recipes
+
+RELATIONSHIPS
+
+One to One
+User_id => user_password
+
+One to Many
+User => recipes
+User => ingredients
+User => occasions
+Many to Many
+Recipes => ingredients
+Recipes => Users
+Occasions => Users
+Ingredients => Grocery list
+
+
+
+CREATE TABLE users(
+  user_id SERIAL PRIMARY KEY,
+  username VARCHAR(20),
+    email_address VARCHAR(30)
+);
+
+CREATE TABLE user_password(
+  user_password_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(user_id),
+  password VARCHAR(1000)
+);
+
+CREATE TABLE recipes (
+  recipes_id SERIAL PRIMARY KEY,
+  ingredients VARCHAR(1000),
+  recipes_image TEXT,
+  recipes_instructions TEXT,
+  PUBLIC BOOLEAN
+);
+
+CREATE TABLE view_recipes (
+  viewer_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(user_id),
+  recipes_id INT NOT NULL REFERENCES recipes(recipes_id)
+);
+
+CREATE TABLE user_recipes (
+  user_recipes_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(user_id),
+  recipes_id INT NOT NULL REFERENCES recipes(recipes_id)
+);
+
+CREATE TABLE recipes_ingredients (
+  recipes_ingredients_id SERIAL PRIMARY KEY,
+  user_recipes_id INT NOT NULL REFERENCES user_recipes(user_recipes_id),
+  user_id INT NOT NULL REFERENCES users(user_id)
+);
+
+CREATE TABLE grocery_list (
+  grocery_list_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(user_id),
+  user_recipes_id INT NOT NULL REFERENCES user_recipes(user_recipes_id)
+);
+
+
+CREATE TABLE user_occasions (
+  user_occasions_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(user_id),
+  user_recipes_id INT NOT NULL REFERENCES user_recipes(user_recipes_id)
+);
+
+
+
